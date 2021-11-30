@@ -10,10 +10,11 @@ import spacy
 df = pandas.read_csv('que-faire-a-paris-.csv', delimiter = ';')
 
 #cleaning description
+#df = df[:500]
 df = df[df['Date de fin'] > str(datetime.today().strftime('%Y-%m-%d'))]
 
-
-description = df['Description'].apply(lambda x: re.sub('<[^<]+?>', '\t', x))
+df['Description']=df[df.columns[2:7]].apply(lambda x:';'.join(x.astype(str)),axis=1)
+description = df['Description'].apply(lambda x: re.sub('<[^<]+?>', ' ', x))
 
 #text analysis
 
@@ -24,11 +25,10 @@ def Remove_Punct(text):
   result = "".join([ch for ch in text if ch not in string.punctuation])
   return result
 
-pct = list(string.punctuation)
-description=description.to_frame()
+description = description.to_frame()
 
-description['Description'] = description['Description'].apply(lambda x: re.sub('\'\’', '\t', x))
 description['Description'] = description['Description'].apply(lambda x: Remove_Punct(x))
+
 
 #python -m spacy download fr au préalable dans un cmd
 
