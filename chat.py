@@ -4,14 +4,19 @@ import nltk
 import string
 from datetime import datetime
 from sklearn.model_selection import train_test_split
+<<<<<<< HEAD
 import nltk
 import spacy
 import string
+=======
+import spacy
+>>>>>>> fecb59e77d879603f6d2a2832659c451b4b63c20
 
 # Opening JSON file as dataframe
 df = pandas.read_csv('que-faire-a-paris-.csv', delimiter = ';')
 
 #cleaning description
+#df = df[:500]
 df = df[df['Date de fin'] > str(datetime.today().strftime('%Y-%m-%d'))]
 
 df['Description']=df[df.columns[2:7]].apply(lambda x:';'.join(x.astype(str)),axis=1)
@@ -30,7 +35,16 @@ description = description.to_frame()
 
 description['Description'] = description['Description'].apply(lambda x: Remove_Punct(x))
 
+<<<<<<< HEAD
+<<<<<<< HEAD
 #nlp = fr_core_news_md.load()
+=======
+=======
+
+>>>>>>> 53313e570f177728abe6c1f3ca1596eb25ba4cd2
+#python -m spacy download fr au préalable dans un cmd
+
+>>>>>>> fecb59e77d879603f6d2a2832659c451b4b63c20
 nlp = spacy.load("fr_core_news_sm")
 stopwords = nlp.Defaults.stop_words
 
