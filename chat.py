@@ -4,13 +4,10 @@ import nltk
 import string
 from datetime import datetime
 from sklearn.model_selection import train_test_split
-<<<<<<< HEAD
 import nltk
 import spacy
 import string
-=======
-import spacy
->>>>>>> fecb59e77d879603f6d2a2832659c451b4b63c20
+#from nltk.tokenize import word_tokenize
 
 # Opening JSON file as dataframe
 df = pandas.read_csv('que-faire-a-paris-.csv', delimiter = ';')
@@ -19,7 +16,7 @@ df = pandas.read_csv('que-faire-a-paris-.csv', delimiter = ';')
 #df = df[:500]
 df = df[df['Date de fin'] > str(datetime.today().strftime('%Y-%m-%d'))]
 
-df['Description']=df[df.columns[2:7]].apply(lambda x:';'.join(x.astype(str)),axis=1)
+df['Description']=df[df.columns[2:7]].apply(lambda x:' '.join(x.astype(str)),axis=1)
 description = df['Description'].apply(lambda x: re.sub('<[^<]+?>', ' ', x))
 
 #text analysis
@@ -27,26 +24,39 @@ description = df['Description'].apply(lambda x: re.sub('<[^<]+?>', ' ', x))
 nltk.download('stopwords')
 nltk.download('punkt')
 
+# Removing punctuation
+
 def Remove_Punct(text):
   result = "".join([ch for ch in text if ch not in string.punctuation])
   return result
 
 description = description.to_frame()
-
 description['Description'] = description['Description'].apply(lambda x: Remove_Punct(x))
-
-<<<<<<< HEAD
-<<<<<<< HEAD
+description['Description'] = description['Description'].apply(lambda x: x.lower())
 #nlp = fr_core_news_md.load()
-=======
-=======
-
->>>>>>> 53313e570f177728abe6c1f3ca1596eb25ba4cd2
 #python -m spacy download fr au préalable dans un cmd
 
->>>>>>> fecb59e77d879603f6d2a2832659c451b4b63c20
+#Removing stopwords from descriptions
+
 nlp = spacy.load("fr_core_news_sm")
 stopwords = nlp.Defaults.stop_words
+
+def Remove_Stopwords(text):
+  result = "".join([ch for ch in text if ch not in stopwords])
+  return result
+
+#tokenizing descriptions
+description['tokenized'] = description['Description'].apply(lambda x: nlp(x))
+
+# Lemmatize descriptions
+def applyLemming(token):
+  stemmedList=[]
+  for word in token:
+    if str(word).lower() not in stopwords:
+      stemmedList.append(word.lemma_)
+  return stemmedList
+
+description["Lemmed"] = description['tokenized'].apply(lambda x: applyLemming(x))
 
 pretrait=[]
 for phrase in description['Description']:
@@ -58,7 +68,7 @@ for phrase in description['Description']:
   pretrait.append(newphrase)
 
 #training_sentences, test_sentences = train_test_split(df['Description'], test_size=0.8)
-
+"""""
 from gensim.models import Phrases
 docs=pretrait
 # Add bigrams and trigrams to docs (only ones that appear 20 times or more).
@@ -109,12 +119,72 @@ model = LdaModel(
     passes=passes,
     eval_every=eval_every
 )
-
-top_topics = model.top_topics(corpus) #, num_words=20)
+"""
+#top_topics = model.top_topics(corpus) #, num_words=20)
 
 # Average topic coherence is the sum of topic coherences of all topics, divided by the number of topics.
-avg_topic_coherence = sum([t[1] for t in top_topics]) / num_topics
-print('Average topic coherence: %.4f.' % avg_topic_coherence)
+#avg_topic_coherence = sum([t[1] for t in top_topics]) / num_topics
+#print('Average topic coherence: %.4f.' % avg_topic_coherence)
 
-from pprint import pprint
-pprint(top_topics)
+# Topics of each data of the dataset
+#df['topics'] = 0
+#for c in corpus:
+#  topics = model.top_topics(c)
+#  df[df['Description'] ==c]['topics'] = topics
+
+#print(df.head())
+
+#from pprint import pprint
+#pprint(top_topics)
+
+
+# VERSION CHARLOTTE
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+
+def extract_best_indices(m, topk, mask=None):
+    """
+    Use sum of the cosine distance over all tokens ans return best mathes.
+    m (np.array): cos matrix of shape (nb_in_tokens, nb_dict_tokens)
+    topk (int): number of indices to return (from high to lowest in order)
+    """
+    # return the sum on all tokens of cosinus for each sentence
+    if len(m.shape) > 1:
+        cos_sim = np.mean(m, axis=0) 
+    else: 
+        cos_sim = m
+    index = np.argsort(cos_sim)[::-1] # from highest idx to smallest score 
+    if mask is not None:
+        assert mask.shape == m.shape
+        mask = mask[index]
+    else:
+        mask = np.ones(len(cos_sim))
+    mask = np.logical_or(cos_sim[index] != 0, mask) #eliminate 0 cosine distance
+    best_index = index[mask][:topk]  
+    return best_index
+
+
+def get_recommendations_tfidf(sentence, tfidf_mat):
+
+  """
+  Return the database sentences in order of highest cosine similarity relatively to each 
+  token of the target sentence. 
+  """
+  # Embed the query sentence
+  tokens_query = [str(tok) for tok in nlp(sentence)]
+  embed_query = vectorizer.transform(tokens_query)
+  # Create list with similarity between query and dataset
+  mat = cosine_similarity(embed_query, tfidf_mat)
+  # Best cosine distance for each token independantly
+  best_index = extract_best_indices(mat, topk=3)
+  return best_index
+
+# Fit TFIDF
+vectorizer = TfidfVectorizer() 
+tfidf_mat = vectorizer.fit_transform(description['Lemmed']) 
+
+# Return best threee matches between query and dataset
+test_sentence = 'a crime story with a beautiful woman' 
+best_index = get_recommendations_tfidf(test_sentence, tfidf_mat)
