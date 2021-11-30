@@ -2,6 +2,9 @@ import re
 import pandas
 from datetime import datetime
 from sklearn.model_selection import train_test_split
+import nltk
+import spacy
+import string
 
 # Opening JSON file as dataframe
 df = pandas.read_csv('que-faire-a-paris-.csv', delimiter = ';')
@@ -23,8 +26,8 @@ pct = list(string.punctuation)
 
 description['Description'] = description['Description'].apply(lambda x: Remove_Punct(x))
 
-nlp = fr_core_news_md.load()
-#nlp = spacy.load("fr_core_news_sm")
+#nlp = fr_core_news_md.load()
+nlp = spacy.load("fr_core_news_sm")
 stopwords = nlp.Defaults.stop_words
 
 training_sentences, test_sentences = train_test_split(df['Description'], test_size=0.8)
