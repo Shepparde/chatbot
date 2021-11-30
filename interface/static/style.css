@@ -1,0 +1,38 @@
+#textInput {
+    border: 3px solid #041FD8;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.userText {
+    color: white;
+    font-family: monospace;
+    font-size: 17px;
+    padding-top: 5px;
+    text-align: right;
+    line-height: 30px;
+}
+.userText span {
+    background-color: #3A638F;
+    padding: 10px;
+    border-radius: 2px;
+}
+.botText {
+    color: white;
+    font-family: monospace;
+    padding-top: 5px;
+    font-size: 17px;
+    text-align: left;
+    line-height: 30px;
+}
+.botText span {
+    background-color: #EC5454;
+    padding: 10px;
+    border-radius: 2px;
+}
+#buttonInput {
+    background-color:#041FD8;
+}
+#chatbox {
+    border: 1px solid #041FD8;
+}
