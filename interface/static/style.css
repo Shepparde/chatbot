@@ -3,7 +3,13 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
-
+h1 {
+    color: #0D0155;
+}
+#chatbox {
+    overflow-y: scroll;
+    height: 400px;
+}
 .userText {
     color: white;
     font-family: monospace;
@@ -35,4 +41,19 @@
 }
 #chatbox {
     border: 1px solid #041FD8;
+}
+@media all and (min-width: 900px){
+
+    #logo {
+        position: absolute;
+        left: 0;
+        margin-left: 15px;
+    }
+
+}
+@media screen and (max-width: 500px)
+{
+    #logo {
+    display: none;
+    }
 }
