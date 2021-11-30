@@ -4,13 +4,9 @@ import nltk
 import string
 from datetime import datetime
 from sklearn.model_selection import train_test_split
-<<<<<<< HEAD
 import nltk
 import spacy
 import string
-=======
-import spacy
->>>>>>> fecb59e77d879603f6d2a2832659c451b4b63c20
 
 # Opening JSON file as dataframe
 df = pandas.read_csv('que-faire-a-paris-.csv', delimiter = ';')
