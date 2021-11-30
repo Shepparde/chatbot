@@ -8,13 +8,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
-    <header>
-        <h1 class="jumbotron  jumbotron-fluid text-center">Trouver une activité à Paris en décrivant votre besoin</h1>
+    <header class="border d-flex align-items-center justify-content-center jumbotron  jumbotron-fluid">
+  
+            <image id="logo"
+                src="https://upload.wikimedia.org/wikipedia/fr/thumb/f/fd/Ville_de_Paris_logo_2019.svg/1200px-Ville_de_Paris_logo_2019.svg.png" 
+                    height="100" width="100"/>
 
+            <h1 class="text-align center">Trouver une activité à Paris en décrivant votre besoin</h1>
     </header>
 <div class="container">
     <div class="row">
-        <div class="col-sm-6 offset-sm-3">
+        <div class="col-sm-6 offset-sm-3" >
             <div id="chatbox" >
                 <p class="botText"><span>
                 Bonjour,<br>
@@ -41,6 +45,8 @@
         var botHtml = '<p class="botText"><span>' + data + '</span></p>';
         $("#chatbox").append(botHtml);
         document.getElementById('userInput').scrollIntoView({block: 'start', behavior: 'smooth'});
+        var scroll=document.getElementById("chatbox");
+        scroll.scrollTop = scroll.scrollHeight;
 });
 }
     $("#textInput").keypress(function(e) {
