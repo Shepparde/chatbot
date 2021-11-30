@@ -14,7 +14,7 @@ df = pandas.read_csv('que-faire-a-paris-.csv', delimiter = ';')
 
 #cleaning description
 #df = df[:500]
-df = df[df['Date de fin'] > str(datetime.today().strftime('%Y-%m-%d'))]
+df = df[df['Date de fin'] > str(datetime.today().strftime('%Y-%m-%d'))].reset_index(drop = True)
 
 df['Description']=df[df.columns[2:7]].apply(lambda x:' '.join(x.astype(str)),axis=1)
 description = df['Description'].apply(lambda x: re.sub('<[^<]+?>', ' ', x))
@@ -179,12 +179,14 @@ def get_recommendations_tfidf(sentence, tfidf_mat):
   mat = cosine_similarity(embed_query, tfidf_mat)
   # Best cosine distance for each token independantly
   best_index = extract_best_indices(mat, topk=3)
-  return best_index
+  response = "Voici nos recommandations : " + "\n\n1."+ str(df.loc[best_index[0], 'Titre']) + "\nCliquez sur lien : " + str(df.loc[best_index[0], 'URL']) + "\n\n2."+ str(df.loc[best_index[1], 'Titre']) + "\nCliquez sur lien : " + str(df.loc[best_index[1], 'URL']) +"\n\n3."+ str(df.loc[best_index[2], 'Titre']) + "\nCliquez sur lien : " + str(df.loc[best_index[2], 'URL'])
+  print(response)
 
 # Fit TFIDF
 vectorizer = TfidfVectorizer() 
-tfidf_mat = vectorizer.fit_transform(description['Lemmed']) 
+tfidf_mat = vectorizer.fit_transform(description['Description']) 
 
 # Return best threee matches between query and dataset
-test_sentence = 'a crime story with a beautiful woman' 
-best_index = get_recommendations_tfidf(test_sentence, tfidf_mat)
+test_sentence = 'concert rock' 
+get_recommendations_tfidf(test_sentence, tfidf_mat)
+
