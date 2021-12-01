@@ -1,10 +1,9 @@
 import random
 import re
-
-
 from flask import Flask, render_template, request
 
-import chat
+from chat import get_recommendations_tfidf,tfidf_mat
+import pickle
 
 app = Flask(__name__)
 
@@ -22,7 +21,7 @@ def get_bot_response():
     if re.search(salutationsAnswers, userText.lower()) and len(userText) < 10:
         return str("Bonjour, <br> pouvez-vous me décrire en détail vos envies d'activités")
     else:
-        return str(chat.get_recommendations_tfidf(userText.lower(),chat.tfidf_mat))#str("Je n'ai pas bien compris votre demande, <br>pouvez-vous s'il vous plait me décrire en détail vos envies d'activités?")
+        return str(get_recommendations_tfidf(userText.lower(),tfidf_mat))#str("Je n'ai pas bien compris votre demande, <br>pouvez-vous s'il vous plait me décrire en détail vos envies d'activités?")
     
 if __name__ == "__main__":
     app.run()
