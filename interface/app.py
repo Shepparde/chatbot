@@ -7,7 +7,7 @@ import os,sys,inspect
 current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir) 
-from preprocessing import applyLemming,nlp,Remove_Stopwords,Remove_Punct
+from preprocessing import applyLemming,nlp,Remove_Punct
 
 app = Flask(__name__)
 
@@ -20,14 +20,14 @@ def home():
 #function for the bot response
 def get_bot_response():
     userText = request.args.get('msg')
-    userText = applyLemming(nlp(Remove_Stopwords(Remove_Punct(userText))))
+    userText = applyLemming(nlp(Remove_Punct(userText)))
     userText=" ".join(userText)
     print(userText)
     salutationsAnswers = re.compile('bonjour|bjr|hello|hi')
     if re.search(salutationsAnswers, userText.lower()) and len(userText) < 10:
         return str("Bonjour, <br> pouvez-vous me décrire en détail vos envies d'activités")
     else:
-        return str(get_recommendations_tfidf(userText.lower(),tfidf_mat))#str("Je n'ai pas bien compris votre demande, <br>pouvez-vous s'il vous plait me décrire en détail vos envies d'activités?")
+        return str(get_recommendations_tfidf(userText.lower(),tfidf_mat))
     
 if __name__ == "__main__":
     app.run()

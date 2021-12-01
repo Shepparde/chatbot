@@ -21,10 +21,6 @@ def Remove_Punct(text):
 nlp = spacy.load("fr_core_news_sm")
 stopwords = nlp.Defaults.stop_words
 
-def Remove_Stopwords(text):
-  result = "".join([ch for ch in text if ch not in stopwords])
-  return result
-
 
 # Lemmatize descriptions
 def applyLemming(token):
@@ -35,7 +31,7 @@ def applyLemming(token):
   return stemmedList
 
 
-def applyAllTreatment():
+def applyAllTreatments():
     
         # Opening  file as dataframe
     df = pandas.read_csv('que-faire-a-paris-.csv', delimiter = ';')
@@ -57,8 +53,7 @@ def applyAllTreatment():
     description['Description'] = description['Description'].apply(lambda x: x.lower())
     print('Ponctuation supprimée')
 
-    description['Description'] = description['Description'].apply(lambda x: Remove_Stopwords(x))
-    print('Stopwords supprimés')
+
     #tokenizing descriptions
     description['tokenized'] = description['Description'].apply(lambda x: nlp(x))
 
@@ -70,6 +65,6 @@ def applyAllTreatment():
     print('Dataframe Sauvegardée')
 
 if __name__ == "__main__":
-    applyAllTreatment()
+    applyAllTreatments()
 else:
-    print("imported as module")
+    print(__name__ ," imported as module")
