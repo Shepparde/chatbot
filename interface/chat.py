@@ -56,26 +56,14 @@ def get_recommendations_tfidf(sentence, tfidf_mat):
   else:
     response = "Nous ne trouvons pas de résultats à votre demande. Veuillez détailler votre demande."
   return response
-  
-
-#import pickle
-
-#filename = 'tfidf_model.sav'
-
-# load the model from disk
-"""loaded_model = pickle.load(open(filename, 'rb'))"""
 
 #Load Preprocessed DataFrame
 description = pandas.read_csv("preprocessed_data.csv",sep=";")
 print("Dataframe chargée")
 # Fit TFIDF
-vectorizer = TfidfVectorizer() #loaded_model
+vectorizer = TfidfVectorizer() 
 tfidf_mat = vectorizer.fit_transform(description['Lemmed_1']) 
 print('Vectorisation effectuée')
 
-
-# save the model to disk
-
-#pickle.dump(vectorizer.vocabulary_, open(filename,"wb"))
 
 
